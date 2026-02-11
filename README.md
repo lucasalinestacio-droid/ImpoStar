@@ -73,4 +73,4 @@ Aquí se inmortalizan a los mejores y peores mentirosos.
 
 ---
 
-Hecho con ❤️ por **Lucas Alinestacio**.
+Hecho con ❤️ por **Lucas Alin**.
