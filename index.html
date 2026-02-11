@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ef4444">
+    <title>ImpoStar</title>
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch((err) => console.log('SW Registration Failed:', err));
+        }
+    </script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body
+    class="bg-gray-900 text-white font-[ 'Plus Jakarta Sans', sans-serif] min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- APP CONTAINER -->
+    <header class="fixed top-0 left-0 w-full z-50 p-4 transition-all duration-300" id="main-header">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <h1 class="text-2xl font-black tracking-tighter text-white drop-shadow-md flex items-center gap-2">
+                <span class="text-3xl">🎭</span> <span class="hidden md:inline">IMPO</span><span
+                    class="text-orange-500">STAR</span>
+            </h1>
+
+            <button onclick="window.App.returnLobby()"
+                class="group bg-stone-800/80 backdrop-blur-md hover:bg-stone-700 text-stone-300 hover:text-white pl-4 pr-5 py-2 rounded-full text-xs font-bold border border-stone-700/50 transition-all shadow-lg flex items-center gap-3">
+                <div class="bg-stone-700 group-hover:bg-stone-600 rounded-full p-1">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </div>
+                <span>MENÚ</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SPACER for Header -->
+    <div class="h-16 md:h-20"></div>
+
+    <div id="app-container" class="w-full max-w-md mx-auto relative z-10 p-4 pb-24">
+
+        <!-- VIEW: HOME (Main Menu) -->
+        <section id="view-home" class="w-full animate-fade-in-up">
+
+            <div class="grid grid-cols-1 gap-3 md:gap-4">
+                <button onclick="window.App.nav('setup')"
+                    class="group relative overflow-hidden bg-gradient-to-r from-orange-600 to-rose-600 p-6 md:p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-transform duration-300">
+                    <div
+                        class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 bg-cover mix-blend-overlay">
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <span
+                            class="text-5xl md:text-6xl mb-2 group-hover:rotate-12 transition-transform duration-300">🎬</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">Jugar</h2>
+                        <p class="text-orange-100 font-medium text-sm md:text-base">Iniciar nueva escena</p>
+                    </div>
+                </button>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="window.App.nav('group')"
+                        class="glass-panel p-6 rounded-3xl hover:bg-stone-800 transition-colors flex flex-col items-center justify-center gap-2 group">
+                        <span class="text-3xl group-hover:scale-110 transition-transform">👥</span>
+                        <span class="font-bold text-stone-200">Elenco</span>
+                    </button>
+                    <button onclick="window.App.nav('script')"
+                        class="glass-panel p-6 rounded-3xl hover:bg-stone-800 transition-colors flex flex-col items-center justify-center gap-2 group">
+                        <span class="text-3xl group-hover:scale-110 transition-transform">📝</span>
+                        <span class="font-bold text-stone-200">Guiones</span>
+                    </button>
+                </div>
+
+                <button onclick="window.App.nav('stats')"
+                    class="glass-panel p-4 rounded-3xl hover:bg-stone-800 transition-colors flex items-center justify-center gap-3 group">
+                    <span class="text-xl">🏆</span>
+                    <span class="font-bold text-stone-300">Salón de la Fama</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: GROUP (Roster) -->
+        <section id="view-group" class="w-full hidden-view">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl mb-4 relative">
+                <button onclick="window.App.nav('home')"
+                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-2xl font-black text-stone-100 mb-1">Elenco</h2>
+                <p class="text-stone-500 text-sm mb-6"><span id="group-count">0</span> estrellas registradas</p>
+
+                <div id="group-list" class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
+
+                <button onclick="window.App.toggleAddModal(true)"
+                    class="w-full py-4 rounded-2xl border-2 border-dashed border-stone-700 text-stone-400 hover:bg-stone-800 hover:text-white hover:border-stone-600 transition-all font-bold flex justify-center items-center gap-2">
+                    <span>+</span> Reclutar Actor
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: STATS -->
+        <section id="view-stats" class="w-full hidden-view">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl relative">
+                <button onclick="window.App.nav('home')"
+                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-2xl font-black text-amber-500 mb-6 flex items-center gap-2">
+                    🏆 Salón de la Fama
+                </h2>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-4 border-b border-stone-800">
+                    <button onclick="window.App.switchStatsTab('total')" id="tab-total"
+                        class="px-4 py-2 font-bold text-sm transition-colors border-b-2 border-orange-500 text-orange-500">
+                        Total
+                    </button>
+                    <button onclick="window.App.switchStatsTab('daily')" id="tab-daily"
+                        class="px-4 py-2 font-bold text-sm text-stone-500 hover:text-stone-300 transition-colors border-b-2 border-transparent">
+                        24 Horas
+                    </button>
+                    <button onclick="window.App.switchStatsTab('monthly')" id="tab-monthly"
+                        class="px-4 py-2 font-bold text-sm text-stone-500 hover:text-stone-300 transition-colors border-b-2 border-transparent">
+                        Mensual
+                    </button>
+                </div>
+
+                <!-- Leaderboard Lists -->
+                <div id="stats-total" class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
+                <div id="stats-daily" class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1 hidden">
+                </div>
+                <div id="stats-monthly"
+                    class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1 hidden"></div>
+
+                <button onclick="window.App.resetDailyWins()"
+                    class="w-full py-3 text-xs uppercase font-bold text-stone-500 hover:text-orange-400 transition-colors border-t border-stone-800 pt-4">
+                    Resetear Victorias de Hoy
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: SCRIPTS -->
+        <section id="view-script" class="w-full hidden-view">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl relative">
+                <button onclick="window.App.nav('home')"
+                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-2xl font-black text-stone-100 mb-6">Guiones</h2>
+
+                <div id="script-list" class="space-y-2 mb-6 max-h-[50vh] overflow-y-auto custom-scrollbar pr-1"></div>
+
+                <button onclick="window.App.toggleAddScriptModal(true)"
+                    class="w-full py-4 rounded-2xl border-2 border-dashed border-stone-700 text-stone-400 hover:bg-stone-800 hover:text-white hover:border-stone-600 transition-all font-bold flex justify-center items-center gap-2">
+                    <span>+</span> Escribir Guion
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: SETUP (Game Config) -->
+        <section id="view-setup" class="w-full hidden-view animate-fade-in-up">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl mb-4 relative">
+                <button onclick="window.App.nav('home')"
+                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-xl font-bold text-stone-100 mb-1">Casting Activo</h2>
+                <p class="text-xs text-stone-500 mb-4"><span id="setup-count" class="text-orange-400 font-bold">0</span>
+                    seleccionados</p>
+
+                <!-- Active Players Toggle -->
+                <div id="setup-player-list"
+                    class="space-y-1 mb-6 max-h-[30vh] overflow-y-auto custom-scrollbar border bg-stone-900/50 p-2 rounded-xl border-stone-800">
+                </div>
+
+                <!-- Settings -->
+                <div class="border-t border-stone-800 pt-5 space-y-5">
+                    <!-- Impostor Settings (Same as before) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-xs font-bold text-stone-500 uppercase tracking-widest">Impostores</label>
+                            <!-- ... Chaos toggle ... -->
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-rose-400">MODO CAOS</span>
+                                <label for="chaos-mode" class="cursor-pointer">
+                                    <input type="checkbox" id="chaos-mode"
+                                        class="w-5 h-5 rounded border-2 border-stone-500 bg-stone-700 cursor-pointer accent-orange-500 checked:bg-orange-500 checked:border-orange-500 transition-colors">
+                                </label>
+
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center justify-between bg-stone-900/50 rounded-xl p-3 border border-stone-800">
+                            <span id="impostor-count-display" class="text-xl font-black text-orange-400 pl-2">1</span>
+                            <input type="range" id="impostor-slider" min="1" max="3" value="1"
+                                class="w-32 h-2 bg-stone-700 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                        </div>
+                    </div>
+
+                    <!-- Timer Toggle -->
+                    <div class="bg-stone-950/50 p-4 rounded-xl border border-stone-800">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3 cursor-pointer"
+                                onclick="document.getElementById('timer-toggle').click()">
+                                <div class="bg-orange-500/20 p-2 rounded-xl hover:bg-orange-500/30 transition-colors">
+                                    <span class="text-xl">⏳</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-stone-200 text-sm">Tiempo de Debate</p>
+                                    <p class="text-[10px] text-stone-500 flex items-center gap-1">
+                                        <span id="timer-status-text">Activado</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="timer-toggle" class="sr-only peer" checked
+                                    onchange="window.App.toggleTimer(this)">
+                                <div
+                                    class="w-11 h-6 bg-stone-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500">
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Duration Slider (Hidden when timer disabled) -->
+                        <div id="timer-slider-container" class="mt-4 border-t border-stone-800 pt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span
+                                    class="text-[10px] text-stone-500 font-bold uppercase tracking-wider">Duración</span>
+                                <span id="timer-display-val"
+                                    class="font-mono text-sm font-black text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">3
+                                    min</span>
+                            </div>
+                            <input type="range" id="timer-duration" min="1" max="10" value="3" step="0.5"
+                                class="w-full h-2 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                                oninput="window.App.updateTimerDisplay(this.value)">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-stone-500 uppercase tracking-widest mb-2">Escenario</label>
+                        <select id="category-select"
+                            class="w-full bg-stone-900 text-stone-200 font-bold rounded-xl p-4 outline-none border border-stone-800 appearance-none cursor-pointer">
+                            <option value="random">🎲 Aleatorio</option>
+                            <option value="Lugares">🌍 Lugares</option>
+                            <option value="Profesiones">💼 Profesiones</option>
+                            <option value="Comida">🍔 Comida</option>
+                            <option value="Cine">🎬 Cine</option>
+                            <option value="Objetos">🧸 Objetos</option>
+                            <option value="Animales">🦁 Animales</option>
+                            <option value="Celebridades">🌟 Celebridades</option>
+                            <option value="Acciones">⚡ Acciones</option>
+                            <option value="Emociones">😊 Emociones</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="window.App.startGame()"
+                    class="w-full mt-6 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-black py-4 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
+                    ACCIÓN 🎬
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: REVEAL -->
+        <section id="view-reveal" class="w-full hidden-view">
+            <div id="reveal-card-container" class="perspective-1000 w-full mb-6">
+                <!-- Card injected via JS -->
+            </div>
+            <p class="text-center text-stone-500 text-sm">Asegúrate de que nadie más mire.</p>
+        </section>
+
+        <!-- VIEW: GAME/DEBATE -->
+        <section id="view-game" class="w-full hidden-view text-center">
+            <div class="glass-panel rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-stone-800">
+                    <div id="timer-fill" class="h-full bg-orange-500 transition-all duration-1000 ease-linear"
+                        style="width: 100%"></div>
+                </div>
+
+                <div class="mt-4">
+                    <p class="text-xs text-stone-500 uppercase tracking-widest mb-4">En el escenario</p>
+                    <div class="inline-flex flex-col items-center">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-indigo-500/20 blur-lg rounded-full animate-pulse-slow">
+                            </div>
+                            <img id="speaker-avatar" src=""
+                                class="w-24 h-24 rounded-full border-4 border-stone-700 bg-stone-800 relative z-10 mb-3">
+                        </div>
+                        <h2 id="speaker-name" class="text-2xl font-black text-white">Nombre</h2>
+                        <span
+                            class="text-indigo-400 text-xs font-bold uppercase tracking-wide bg-indigo-500/10 px-3 py-1 rounded-full mt-2">Primer
+                            Turno</span>
+                    </div>
+                </div>
+
+                <div class="my-12">
+                    <div id="timer-progress-bar" class="mb-4">
+                        <!-- Timer progress bar shown when timer is enabled -->
+                    </div>
+                    <div id="timer-display" class="text-6xl font-mono font-black text-stone-200 tracking-tighter">05:00
+                    </div>
+                    <div id="timer-infinity-msg" class="hidden text-2xl font-bold text-stone-300 px-4">
+                        Que comience el debate sin prisa
+                    </div>
+                </div>
+
+                <button onclick="window.App.endGame()"
+                    class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all animate-bounce hover:animate-none">
+                    🚨 RESOLVER CASO
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: RESULTS -->
+        <section id="view-results" class="w-full hidden-view">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl">
+                <div class="text-center mb-6">
+                    <p class="text-xs text-stone-500 uppercase tracking-widest">La palabra clave era</p>
+                    <h1 id="result-word"
+                        class="text-3xl font-black text-orange-400 mt-1 pb-4 border-b border-stone-800">PALABRA</h1>
+                </div>
+
+                <div id="result-grid" class="space-y-2 mb-6 max-h-[50vh] overflow-y-auto custom-scrollbar pr-1">
+                    <!-- Results Injected -->
+                </div>
+
+                <div id="result-actions" class="mb-6"></div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODAL ADD -->
+    <div id="modal-add"
+        class="fixed inset-0 bg-stone-950/90 hidden z-50 flex items-center justify-center p-6 backdrop-blur-sm animate-fade-in-up">
+        <div class="bg-stone-900 w-full max-w-sm rounded-3xl p-6 border border-stone-800 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4">Contratar Actor</h3>
+            <input type="text" id="new-player-input" placeholder="Nombre artístico"
+                class="w-full bg-stone-950 text-white border border-stone-700 rounded-xl p-4 mb-4 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all font-bold"
+                onkeypress="if(event.key === 'Enter') window.App.handleAddPlayer()">
+            <div class="flex gap-3">
+                <button onclick="window.App.toggleAddModal(false)"
+                    class="flex-1 py-3 text-stone-400 hover:text-white font-bold transition-colors">Cancelar</button>
+                <button onclick="window.App.handleAddPlayer()"
+                    class="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:to-amber-400 text-stone-900 font-black rounded-xl py-3 transition-colors shadow-lg shadow-orange-500/20">CONTRATAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ADD SCRIPT (New "AI" Wizard) -->
+    <div id="modal-script"
+        class="fixed inset-0 bg-stone-950/90 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in-up">
+        <div
+            class="bg-stone-900 w-full max-w-md rounded-3xl border border-stone-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+
+            <!-- Header -->
+            <div class="p-6 pb-2">
+                <h3 class="text-xl font-black text-white flex items-center gap-2">
+                    <span class="text-2xl">⚡</span> Creando Guion
+                </h3>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <input type="text" id="new-script-title" placeholder="Título del Guion (ej: Superhéroes)"
+                    class="w-full bg-stone-950 text-white font-bold border border-stone-700 rounded-xl p-4 mb-6 outline-none focus:border-orange-500 text-lg">
+
+                <!-- Added List -->
+                <div id="new-script-list" class="space-y-2 mb-6 hidden"></div>
+
+                <!-- Input Zone -->
+                <div class="bg-stone-800/50 p-4 rounded-2xl border border-stone-700/50 mb-2">
+                    <label class="block text-xs font-bold text-stone-500 uppercase tracking-widest mb-2">Nuevo
+                        Concepto</label>
+                    <input type="text" id="temp-word" placeholder="Palabra (ej: Batman)"
+                        class="w-full bg-stone-950 text-white border border-stone-700 rounded-xl p-3 mb-2 outline-none focus:border-orange-500 text-sm">
+                    <input type="text" id="temp-hint" placeholder="Pista / Descripción (ej: Caballero Oscuro)"
+                        class="w-full bg-stone-950 text-stone-300 border border-stone-700 rounded-xl p-3 mb-3 outline-none focus:border-orange-500 text-sm">
+
+                    <button onclick="window.App.addTempword()"
+                        class="w-full py-3 bg-stone-700 hover:bg-stone-600 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <span>+</span> Añadir a la lista
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="p-6 pt-2 bg-stone-900 border-t border-stone-800 flex gap-3">
+                <button onclick="window.App.toggleAddScriptModal(false)"
+                    class="flex-1 py-3 text-stone-400 hover:text-white font-bold transition-colors">Cancelar</button>
+                <button onclick="window.App.saveCustomScript()"
+                    class="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:to-amber-400 text-stone-900 font-black rounded-xl py-3 transition-colors shadow-lg shadow-orange-500/20">
+                    GUARDAR GUION
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS SCRIPTS (Sequential) -->
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

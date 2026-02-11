@@ -1,0 +1,17 @@
+{
+    "name": "ImpoStar - Juego de Deducción",
+    "short_name": "ImpoStar",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#111827",
+    "theme_color": "#ef4444",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "img/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
