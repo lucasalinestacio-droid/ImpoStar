@@ -37,12 +37,36 @@
     <link rel="icon" href="img/logo.png" type="image/png">
     <link rel="apple-touch-icon" href="img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=6">
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Service Worker Registered'))
-                .catch((err) => console.log('SW Registration Failed:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => {
+                        reg.onupdatefound = () => {
+                            const installingWorker = reg.installing;
+                            installingWorker.onstatechange = () => {
+                                if (installingWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // New content is available; please refresh.
+                                        console.log('New content available, refreshing...');
+                                        window.location.reload();
+                                    }
+                                }
+                            };
+                        };
+                    })
+                    .catch((err) => console.log('SW Registration Failed:', err));
+            });
+
+            // Handle forced refresh when new SW kicks in
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
+            });
         }
     </script>
     <!-- Fonts -->
@@ -540,11 +564,11 @@
     </div>
 
     <!-- JS SCRIPTS (Sequential) -->
-    <script src="js/data.js"></script>
-    <script src="js/store.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/data.js?v=6"></script>
+    <script src="js/store.js?v=6"></script>
+    <script src="js/ui.js?v=6"></script>
+    <script src="js/game.js?v=6"></script>
+    <script src="js/app.js?v=6"></script>
 </body>
 
 </html>

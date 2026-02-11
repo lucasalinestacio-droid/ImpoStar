@@ -1,4 +1,4 @@
-const CACHE_NAME = 'impostar-v5';
+const CACHE_NAME = 'impostar-v6';
 const ASSETS = [
     './',
     './index.html',
@@ -13,14 +13,36 @@ const ASSETS = [
     './manifest.json'
 ];
 
+// Install Event
 self.addEventListener('install', (e) => {
+    self.skipWaiting(); // Force the waiting service worker to become the active service worker
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
 });
 
+// Activate Event - Clean up old caches
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(keys.map((key) => {
+                if (key !== CACHE_NAME) return caches.delete(key);
+            }));
+        }).then(() => self.clients.claim()) // Become control of all clients immediately
+    );
+});
+
+// Fetch Event - Stale-While-Revalidate
 self.addEventListener('fetch', (e) => {
     e.respondWith(
-        caches.match(e.request).then((response) => response || fetch(e.request))
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.match(e.request).then((response) => {
+                const fetchPromise = fetch(e.request).then((networkResponse) => {
+                    cache.put(e.request, networkResponse.clone());
+                    return networkResponse;
+                });
+                return response || fetchPromise;
+            });
+        })
     );
 });
