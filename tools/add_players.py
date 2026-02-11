@@ -278,7 +278,7 @@ ICONIC_ITEMS = [
     ("Superclásico", ["Boca", "River", "Pasión"]),
     ("Balón de Oro", ["Premio", "Mejor", "Individual"]),
     ("Bota de Oro", ["Goleador", "Europa", "Premio"]),
-    ("Champions League", ["Europa", "Himno", "Orejana"]),
+    ("Champions League", ["Europa", "Himno", "Orejona"]),
     ("Copa del Mundo", ["Naciones", "Francia", "Trofeo"]),
     ("Copa Libertadores", ["Sudamérica", "Gloria", "Eterna"]),
     ("Eurocopa", ["Europa", "Naciones", "Torneo"]),
@@ -310,6 +310,59 @@ ICONIC_ITEMS = [
     ("Veltins Arena", ["Schalke", "Techo", "Túnel"]),
 ]
 
+# --- TOP CLUBS [3 Hints] ---
+TOP_CLUBS = [
+    ("Real Madrid", ["España", "Blanco", "Galácticos"]),
+    ("FC Barcelona", ["España", "Culé", "Masía"]),
+    ("Atlético de Madrid", ["España", "Colchonero", "Cholo"]),
+    ("Manchester City", ["Inglaterra", "Citizen", "Pep"]),
+    ("Liverpool FC", ["Inglaterra", "Red", "Klopp"]),
+    ("Manchester United", ["Inglaterra", "Diablo", "Ferguson"]),
+    ("Arsenal FC", ["Inglaterra", "Gunner", "Invencibles"]),
+    ("Chelsea FC", ["Inglaterra", "Blue", "Londres"]),
+    ("Bayern de Múnich", ["Alemania", "Bávaro", "Gigante"]),
+    ("Borussia Dortmund", ["Alemania", "Amarillo", "Muro"]),
+    ("Bayer Leverkusen", ["Alemania", "Neverkusen", "Xabi"]),
+    ("Juventus", ["Italia", "Vecchia Signora", "Turín"]),
+    ("Inter de Milán", ["Italia", "Neroazzurro", "Lautaro"]),
+    ("AC Milan", ["Italia", "Rossonero", "San Siro"]),
+    ("SSC Nápoles", ["Italia", "Maradona", "Celeste"]),
+    ("Paris Saint-Germain", ["Francia", "París", "Jeque"]),
+    ("Olympique de Marsella", ["Francia", "Velodrome", "Champions"]),
+    ("Ajax", ["Países Bajos", "Ámsterdam", "Cruyff"]),
+    ("PSV Eindhoven", ["Países Bajos", "Granjero", "Ronaldo"]),
+    ("Benfica", ["Portugal", "Águila", "Lisboa"]),
+    ("Porto", ["Portugal", "Dragón", "Casillas"]),
+    ("Sporting de Portugal", ["Portugal", "León", "CR7"]),
+    ("Boca Juniors", ["Argentina", "Xeneize", "Bombonera"]),
+    ("River Plate", ["Argentina", "Millonario", "Monumental"]),
+    ("Flamengo", ["Brasil", "Mengão", "Maracaná"]),
+    ("Palmeiras", ["Brasil", "Verdão", "Libertadores"]),
+    ("Santos FC", ["Brasil", "Peixe", "Pelé"]),
+    ("Celtic FC", ["Escocia", "Católico", "Glasgow"]),
+    ("Rangers FC", ["Escocia", "Protestante", "Ibrox"]),
+    ("Sevilla FC", ["España", "Nervión", "Europa League"]),
+    ("Real Betis", ["España", "Verdiblanco", "Joaquín"]),
+    ("Athletic Club", ["España", "Leones", "Filosofía"]),
+    ("Real Sociedad", ["España", "Txuri-urdin", "Anoeta"]),
+    ("Valencia CF", ["España", "Ché", "Mestalla"]),
+    ("Villarreal CF", ["España", "Submarino", "Riquelme"]),
+    ("Tottenham Hotspur", ["Inglaterra", "Spur", "Kane"]),
+    ("Aston Villa", ["Inglaterra", "Villano", "Emery"]),
+    ("Newcastle United", ["Inglaterra", "Urraca", "Alan Shearer"]),
+    ("AS Roma", ["Italia", "Loba", "Totti"]),
+    ("SS Lazio", ["Italia", "Águila", "Roma"]),
+    ("AS Mónaco", ["Francia", "Principado", "Mbappé"]),
+    ("Olympique de Lyon", ["Francia", "Leones", "Benzema"]),
+    ("Feyenoord", ["Países Bajos", "Róterdam", "Giménez"]),
+    ("Corinthians", ["Brasil", "Timão", "Sócrates"]),
+    ("São Paulo", ["Brasil", "Tricolor", "Kaká"]),
+    ("Peñarol", ["Uruguay", "Carbonero", "Manyas"]),
+    ("Nacional de Montevideo", ["Uruguay", "Bolso", "Suárez"]),
+    ("Independiente", ["Argentina", "Rojo", "Rey de Copas"]),
+    ("Racing Club", ["Argentina", "Academia", "Bahía Blanca"]),
+]
+
 # Parsing players
 all_players = []
 for name, hints in LEGEND_HINTS.items():
@@ -335,6 +388,11 @@ for player in all_players:
     js_content += f"        {{ word: '{word}', hints: {hints} }},\n"
 # Add iconic items to Fútbol
 for name, hints in ICONIC_ITEMS:
+    word = name.replace("'", "\\'")
+    hints_esc = [h.replace("'", "\\'") for h in hints]
+    js_content += f"        {{ word: '{word}', hints: {hints_esc} }},\n"
+# Add clubs to Fútbol
+for name, hints in TOP_CLUBS:
     word = name.replace("'", "\\'")
     hints_esc = [h.replace("'", "\\'") for h in hints]
     js_content += f"        {{ word: '{word}', hints: {hints_esc} }},\n"
@@ -364,7 +422,7 @@ try:
         new_content = content[:start_pos] + js_content + content[final_dedup_pos:]
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
-        print(f"Successfully updated 'Fútbol' with players and {len(ICONIC_ITEMS)} iconic concepts.")
+        print(f"Successfully updated 'Fútbol' with players, iconic concepts and {len(TOP_CLUBS)} clubs.")
     else:
         print("Error: Could not find block to replace.")
 
