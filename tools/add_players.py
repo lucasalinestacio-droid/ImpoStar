@@ -57,8 +57,8 @@ LEGEND_HINTS = {
     "Emilio Butragueño": ["Madrid", "DC", "Buitre", "Castilla"],
     "Luis Enrique Martínez": ["Gijón", "MC", "Lucho", "Sporting"],
     "Raúl González": ["Madrid", "DC", "Ángel", "Madrid"],
-    "Michelle Akers": ["Santa Clara", "MC", "Pionera", "UCF"], # College debut often cited for US women of that era or Tyresö
-    "Mia Hamm": ["Selma", "DC", "Jordan", "NC"], # North Carolina Tar Heels
+    "Michelle Akers": ["Santa Clara", "MC", "Pionera", "UCF"],
+    "Mia Hamm": ["Selma", "DC", "Jordan", "NC"],
     "Éric Cantona": ["Marsella", "DC", "King", "Auxerre"],
     "Marcel Desailly": ["Accra", "DFC", "Roca", "Nantes"],
     "Didier Deschamps": ["Bayona", "MCD", "Aguador", "Nantes"],
@@ -133,7 +133,6 @@ LEGEND_HINTS = {
 
 # --- CURRENT STARS [City, Position, Clever Hint, Debut Team] ---
 current_stars_data = [
-    # Man City
     ("Erling Haaland", "Leeds", "DC", "Android", "Bryne"),
     ("Phil Foden", "Stockport", "MCO", "Sniper", "City"),
     ("Rodri", "Madrid", "MCD", "Timón", "Villarreal"),
@@ -145,8 +144,6 @@ current_stars_data = [
     ("Kyle Walker", "Sheffield", "LD", "Flash", "Sheffield"),
     ("Jeremy Doku", "Amberes", "ED", "Regate", "Anderlecht"),
     ("Kevin De Bruyne", "Gante", "MCO", "Asistente", "Genk"),
-    
-    # Real Madrid
     ("Kylian Mbappé", "París", "DC", "Tortuga", "Mónaco"),
     ("Jude Bellingham", "Stourbridge", "MCO", "Hey", "Birmingham"),
     ("Vinicius Junior", "São Gonçalo", "EI", "Baila", "Flamengo"),
@@ -160,8 +157,6 @@ current_stars_data = [
     ("Arda Güler", "Ankara", "MCO", "Talento", "Fenerbahçe"),
     ("Luka Modric", "Zadar", "MC", "Maestro", "Dinamo"),
     ("Dani Carvajal", "Leganés", "LD", "Pitbull", "Castilla"),
-    
-    # Arsenal
     ("Bukayo Saka", "Londres", "ED", "Starboy", "Arsenal"),
     ("Declan Rice", "Londres", "MCD", "Arroz", "West Ham"),
     ("Martin Ødegaard", "Drammen", "MCO", "Mozart", "Strømsgodset"),
@@ -170,8 +165,6 @@ current_stars_data = [
     ("Gabriel Jesus", "São Paulo", "DC", "Teléfono", "Palmeiras"),
     ("Kai Havertz", "Aquisgrán", "DC", "Cobra", "Leverkusen"),
     ("Ben White", "Poole", "LD", "Bronceado", "Brighton"),
-    
-    # Barcelona
     ("Lamine Yamal", "Mataró", "ED", "304", "Barça"),
     ("Gavi", "Los Palacios", "MC", "Garra", "Barça"),
     ("Pedri", "Tegueste", "MC", "Potter", "Las Palmas"),
@@ -182,8 +175,6 @@ current_stars_data = [
     ("Jules Koundé", "París", "LD", "Moda", "Burdeos"),
     ("Pau Cubarsí", "Estanyol", "DFC", "Kaiser", "Barça"),
     ("Alejandro Balde", "Barcelona", "LI", "Moto", "Barça"),
-    
-    # Bayern
     ("Jamal Musiala", "Stuttgart", "MCO", "Bambi", "Bayern"),
     ("Harry Kane", "Londres", "DC", "Huracán", "Spurs"),
     ("Leroy Sané", "Essen", "ED", "Tatuaje", "Schalke"),
@@ -192,21 +183,15 @@ current_stars_data = [
     ("Manuel Neuer", "Gelsenkirchen", "POR", "Esquí", "Schalke"),
     ("Thomas Müller", "Weilheim", "SD", "Radio", "Bayern"),
     ("Min-jae Kim", "Tongyeong", "DFC", "Monstruo", "Gyeongju"),
-    
-    # Leverkusen
     ("Florian Wirtz", "Pulheim", "MCO", "Talento", "Leverkusen"),
     ("Jeremie Frimpong", "Ámsterdam", "LD", "Speed", "Celtic"),
     ("Alejandro Grimaldo", "Valencia", "LI", "Golazo", "Barça"),
     ("Granit Xhaka", "Basilea", "MC", "Líder", "Basilea"),
-    
-    # Inter
     ("Lautaro Martínez", "Bahía Blanca", "DC", "Toro", "Racing"),
     ("Nicolò Barella", "Cagliari", "MC", "Motor", "Cagliari"),
     ("Alessandro Bastoni", "Casalmaggiore", "DFC", "Elegancia", "Atalanta"),
     ("Hakan Çalhanoğlu", "Mannheim", "MC", "Sniper", "Karlsluher"),
     ("Federico Dimarco", "Milán", "LI", "Zurda", "Inter"),
-    
-    # PSG
     ("Achraf Hakimi", "Madrid", "LD", "Ave", "Madrid"),
     ("Ousmane Dembélé", "Vernon", "ED", "Dembouz", "Rennes"),
     ("Warren Zaïre-Emery", "Montreuil", "MC", "Niño", "PSG"),
@@ -214,8 +199,6 @@ current_stars_data = [
     ("Marquinhos", "São Paulo", "DFC", "Capitán", "Corinthians"),
     ("Gianluigi Donnarumma", "Castellammare", "POR", "Gigio", "Milan"),
     ("Bradley Barcola", "Lyon", "EI", "Veloz", "Lyon"),
-    
-    # Liverpool
     ("Mohamed Salah", "Nagrig", "ED", "Faraón", "Mokawloon"),
     ("Virgil van Dijk", "Breda", "DFC", "Virgil", "Groningen"),
     ("Trent Alexander-Arnold", "Liverpool", "LD", "Centro", "Liverpool"),
@@ -224,37 +207,27 @@ current_stars_data = [
     ("Luis Díaz", "Barrancas", "EI", "Lucho", "Barranquilla"),
     ("Darwin Núñez", "Artigas", "DC", "Pantera", "Peñarol"),
     ("Alisson Becker", "Novo Hamburgo", "POR", "Santo", "Internacional"),
-
-    # Others
     ("Bruno Fernandes", "Maia", "MCO", "Magnifico", "Novara"),
     ("Marcus Rashford", "Manchester", "EI", "MBE", "United"),
     ("Lisandro Martínez", "Gualeguay", "DFC", "Carnicero", "Newell's"),
     ("Alejandro Garnacho", "Madrid", "EI", "Bichito", "United"),
-    
     ("Heung-min Son", "Chuncheon", "EI", "Sanny", "Hamburgo"),
     ("James Maddison", "Coventry", "MCO", "Dardos", "Coventry"),
-    
     ("Cole Palmer", "Manchester", "MCO", "Cold", "City"),
     ("Enzo Fernández", "San Martín", "MC", "Gardel", "River"),
     ("Moisés Caicedo", "Santo Domingo", "MCD", "Niño", "Independiente"),
-    
     ("Alexander Isak", "Solna", "DC", "Unicornio", "AIK"),
     ("Bruno Guimarães", "Río", "MC", "Mágico", "Audax"),
-    
     ("Khvicha Kvaratskhelia", "Tiflis", "EI", "Kvaradona", "Dinamo"),
     ("Victor Osimhen", "Lagos", "DC", "Máscara", "Wolfsburgo"), 
-    
     ("Rafael Leão", "Almada", "EI", "Sonriente", "Sporting"),
     ("Theo Hernández", "Marsella", "LI", "TGV", "Atleti"),
     ("Mike Maignan", "Cayena", "POR", "Magic", "Lille"),
-    
     ("Paulo Dybala", "Laguna Larga", "SD", "Joya", "Instituto"),
-    
     ("Antoine Griezmann", "Mâcon", "SD", "Principito", "Real Sociedad"),
     ("Koke", "Madrid", "MC", "Capitán", "Atleti"),
-    ("Jan Oblak", "Škofja Loka", "POR", "Muro", "Olimpija"),
+    ("Jan Oblak", " Škofja Loka", "POR", "Muro", "Olimpija"),
     ("Julián Álvarez", "Calchín", "DC", "Araña", "River"),
-    
     ("Neymar", "Mogi das Cruzes", "EI", "Ney", "Santos"),
     ("Cristiano Ronaldo", "Funchal", "DC", "Siuuu", "Sporting"),
     ("Lionel Messi", "Rosario", "DC", "Cabra", "Barça"),
@@ -262,65 +235,112 @@ current_stars_data = [
     ("N'Golo Kanté", "París", "MCD", "Pulmón", "Boulogne"),
     ("Riyad Mahrez", "Sarcelles", "ED", "Control", "Quimper"),
     ("Sadio Mané", "Bambali", "EI", "Humilde", "Metz"),
-
     ("Dusan Vlahovic", "Belgrado", "DC", "DV9", "Partizan"),
     ("Gleison Bremer", "Itapitanga", "DFC", "Roca", "Desportivo"),
     ("Teun Koopmeiners", "Castricum", "MC", "General", "AZ"),
-    
     ("Xavi Simons", "Ámsterdam", "MCO", "Rizos", "PSG"),
     ("Dani Olmo", "Terrassa", "MCO", "Time", "Dinamo"), 
-    
     ("Nico Williams", "Pamplona", "EI", "Cohete", "Bilbao"),
     ("Oihan Sancet", "Pamplona", "MCO", "Ciervo", "Bilbao"),
     ("Unai Simón", "Murgia", "POR", "Zamora", "Basconia"),
-    
     ("Mikel Merino", "Pamplona", "MC", "Conde", "Osasuna"),
     ("Mikel Oyarzabal", "Eibar", "EI", "Piegrande", "Real"),
     ("Martin Zubimendi", "San Sebastián", "MCD", "Zubi", "Real"),
-    
     ("Takefusa Kubo", "Kawasaki", "ED", "Take", "Tokyo"),
-    
     ("Viktor Gyökeres", "Estocolmo", "DC", "Máscara", "Brommapojkarna"),
     ("Ousmane Diomande", "Abiyán", "DFC", "Diamante", "Midtjylland"),
-    
     ("Diogo Costa", "Rothrist", "POR", "Muro", "Porto"),
-    
     ("Orkun Kökcü", "Haarlem", "MC", "Maestro", "Groningen"),
     ("Angel Di Maria", "Rosario", "ED", "Fideo", "Rosario"),
-    
     ("Santiago Giménez", "Buenos Aires", "DC", "Bebote", "Cruz Azul"),
 ]
 
-# Parsing current stars
-current_stars_list = []
-for p in current_stars_data:
-    current_stars_list.append({'word': p[0], 'hints': [p[1], p[2], p[3], p[4]]})
+# --- ICONIC FOOTBALL CONCEPTS (Stadiums, Matches, etc.) [3 Hints] ---
+ICONIC_ITEMS = [
+    ("Santiago Bernabéu", ["Madrid", "Blanco", "Remontadas"]),
+    ("Camp Nou", ["Barcelona", "Culé", "Grande"]),
+    ("Maracaná", ["Brasil", "Río", "Final"]),
+    ("Wembley", ["Londres", "Inglaterra", "Templo"]),
+    ("La Bombonera", ["Buenos Aires", "Boca", "Late"]),
+    ("San Siro", ["Italia", "Milán", "Compartido"]),
+    ("Old Trafford", ["Manchester", "Teatro", "Sueños"]),
+    ("Anfield", ["Liverpool", "Nunca", "Solo"]),
+    ("Allianz Arena", ["Múnich", "Luces", "Inflable"]),
+    ("Signal Iduna Park", ["Dortmund", "Muro", "Amarillo"]),
+    ("Estadio Azteca", ["México", "Mundiales", "Maradona"]),
+    ("El Monumental", ["Buenos Aires", "River", "Argentina"]),
+    ("Maracanazo", ["Uruguay", "1950", "Silencio"]),
+    ("Noche de Estambul", ["Liverpool", "Milan", "Remontada"]),
+    ("Final Sudáfrica 2010", ["España", "Iniesta", "Pulpo"]),
+    ("Mineirazo", ["Alemania", "Brasil", "Siete"]),
+    ("Clásico", ["Real Madrid", "Barcelona", "Rivalidad"]),
+    ("Derbi de Milán", ["Inter", "Milan", "Madonnina"]),
+    ("Superclásico", ["Boca", "River", "Pasión"]),
+    ("Balón de Oro", ["Premio", "Mejor", "Individual"]),
+    ("Bota de Oro", ["Goleador", "Europa", "Premio"]),
+    ("Champions League", ["Europa", "Himno", "Orejana"]),
+    ("Copa del Mundo", ["Naciones", "Francia", "Trofeo"]),
+    ("Copa Libertadores", ["Sudamérica", "Gloria", "Eterna"]),
+    ("Eurocopa", ["Europa", "Naciones", "Torneo"]),
+    ("Copa América", ["Sudamérica", "Naciones", "Torneo"]),
+    ("Boxing Day", ["Inglaterra", "Navidad", "Fútbol"]),
+    ("Fuera de Juego", ["Regla", "Línea", "VAR"]),
+    ("Penalti", ["Punto", "Once", "Área"]),
+    ("Córner", ["Esquina", "Centro", "Bandera"]),
+    ("Hat-trick", ["Tres", "Goles", "Balón"]),
+    ("Póker", ["Cuatro", "Goles", "Hito"]),
+    ("Manita", ["Cinco", "Goles", "Barcelona"]),
+    ("Tiqui-taca", ["España", "Pases", "Estilo"]),
+    ("Catenaccio", ["Italia", "Defensa", "Cerrojo"]),
+    ("Total Football", ["Cruyff", "Holanda", "Estilo"]),
+    ("Joga Bonito", ["Brasil", "Arte", "Regates"]),
+    ("El Clásico del Astillero", ["Ecuador", "Guayaquil", "Rivalidad"]),
+    ("Estadio Da Luz", ["Lisboa", "Benfica", "Águila"]),
+    ("Estadio Do Dragão", ["Oporto", "Dragón", "Portugal"]),
+    ("Stade de France", ["París", "Nacional", "1998"]),
+    ("Parque de los Príncipes", ["París", "PSG", "Mbappé"]),
+    ("Etihad Stadium", ["Manchester", "City", "Moderno"]),
+    ("Juventus Stadium", ["Turín", "Juve", "Moderno"]),
+    ("El Molinón", ["Gijón", "Antiguo", "España"]),
+    ("San Mamés", ["Bilbao", "Catedral", "Leones"]),
+    ("Pizjuán", ["Sevilla", "Nervión", "Infierno"]),
+    ("Mestalla", ["Valencia", "Murciélago", "Vertical"]),
+    ("La Cerámica", ["Villarreal", "Amarillo", "Azulejos"]),
+    ("Stamford Bridge", ["Londres", "Chelsea", "Blues"]),
+    ("Veltins Arena", ["Schalke", "Techo", "Túnel"]),
+]
 
-# Parsing logic for legends
-legends_list = []
+# Parsing players
+all_players = []
 for name, hints in LEGEND_HINTS.items():
-    legends_list.append({'word': name, 'hints': hints})
+    all_players.append({'word': name, 'hints': hints})
 
-# Combine lists
-all_new_players = legends_list + current_stars_list
+for p in current_stars_data:
+    all_players.append({'word': p[0], 'hints': [p[1], p[2], p[3], p[4]]})
 
-# Format as JS
+# Formatting lists
 js_content = "const EXTENSION_DATA_9 = {\n"
 js_content += "    'Celebridades': [\n"
-for player in all_new_players:
-    # Escape single quotes in names/hints for JS safety
+for player in all_players:
     word = player['word'].replace("'", "\\'")
     hints = [h.replace("'", "\\'") for h in player['hints']]
     js_content += f"        {{ word: '{word}', hints: {hints} }},\n"
 js_content += "    ],\n"
+
 js_content += "    'Fútbol': [\n"
-for player in all_new_players:
-    # Escape single quotes in names/hints for JS safety
+# Add players to Fútbol
+for player in all_players:
     word = player['word'].replace("'", "\\'")
     hints = [h.replace("'", "\\'") for h in player['hints']]
     js_content += f"        {{ word: '{word}', hints: {hints} }},\n"
+# Add iconic items to Fútbol
+for name, hints in ICONIC_ITEMS:
+    word = name.replace("'", "\\'")
+    hints_esc = [h.replace("'", "\\'") for h in hints]
+    js_content += f"        {{ word: '{word}', hints: {hints_esc} }},\n"
 js_content += "    ]\n"
 js_content += "};\n\n"
+
 js_content += "// MERGE LOGIC 9\n"
 js_content += "for (let category in EXTENSION_DATA_9) {\n"
 js_content += "    if (DATA[category]) {\n"
@@ -330,28 +350,23 @@ js_content += "        DATA[category] = EXTENSION_DATA_9[category];\n"
 js_content += "    }\n"
 js_content += "}\n\n"
 
-# Read existing file
+# Update data.js
 file_path = r'c:\Users\Usuario\Documents\Impostor\js\data.js'
 try:
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Determine insertion point - REPLACE EXTENSION_DATA_9 block
     start_marker = "const EXTENSION_DATA_9 = {"
     start_pos = content.find(start_marker)
     final_dedup_pos = content.find("// FINAL DEDUPLICATION AND CLEANUP")
     
     if start_pos != -1 and final_dedup_pos != -1:
-        # Replace the entire block
         new_content = content[:start_pos] + js_content + content[final_dedup_pos:]
-        
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
-        print(f"Successfully updated players with DEBUT TEAM hints. Total: {len(all_new_players)} players.")
+        print(f"Successfully updated 'Fútbol' with players and {len(ICONIC_ITEMS)} iconic concepts.")
     else:
-        print("Error: Could not find block to replace. Please check file structure.")
+        print("Error: Could not find block to replace.")
 
-except FileNotFoundError:
-    print(f"Error: File not found at {file_path}")
 except Exception as e:
     print(f"Error: {e}")
