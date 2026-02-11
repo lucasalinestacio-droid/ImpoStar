@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://impostar.netlify.app/sitemap.xml
