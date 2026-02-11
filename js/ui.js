@@ -444,6 +444,7 @@ window.getCategoryIcon = (cat) => {
         "Objetos": "🧸",
         "Animales": "🦁",
         "Celebridades": "🌟",
+        "Fútbol": "⚽",
         "Acciones": "⚡",
         "Emociones": "😊"
     };
