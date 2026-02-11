@@ -4,7 +4,7 @@
 
 // Helper to switch sections
 window.Router = {
-    views: ['home', 'group', 'stats', 'script', 'setup', 'reveal', 'game', 'results'],
+    views: ['home', 'group', 'stats', 'script', 'setup', 'reveal', 'game', 'results', 'help'],
 
     go(viewId) {
         this.views.forEach(id => {

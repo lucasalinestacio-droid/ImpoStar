@@ -109,11 +109,18 @@
                     </button>
                 </div>
 
-                <button onclick="window.App.nav('stats')"
-                    class="glass-panel p-4 rounded-3xl hover:bg-stone-800 transition-colors flex items-center justify-center gap-3 group">
-                    <span class="text-xl">🏆</span>
-                    <span class="font-bold text-stone-300">Salón de la Fama</span>
-                </button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="window.App.nav('stats')"
+                        class="glass-panel p-4 rounded-3xl hover:bg-stone-800 transition-colors flex items-center justify-center gap-3 group">
+                        <span class="text-xl">🏆</span>
+                        <span class="font-bold text-stone-300">Fama</span>
+                    </button>
+                    <button onclick="window.App.nav('help')"
+                        class="glass-panel p-4 rounded-3xl hover:bg-stone-800 transition-colors flex items-center justify-center gap-3 group">
+                        <span class="text-xl">🎓</span>
+                        <span class="font-bold text-stone-300">Tutorial</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -381,6 +388,85 @@
 
                 <div id="result-actions" class="mb-6"></div>
 
+            </div>
+        </section>
+
+        <!-- VIEW: HELP (Tutorial) -->
+        <section id="view-help" class="w-full hidden-view">
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl relative">
+                <button onclick="window.App.nav('home')"
+                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-2xl font-black text-stone-100 mb-6 flex items-center gap-2">
+                    🎓 Cómo Jugar
+                </h2>
+
+                <div
+                    class="space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar pr-2 text-stone-300 text-sm leading-relaxed">
+
+                    <div>
+                        <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
+                            <span>👥</span> 1. Actores (Elenco)
+                        </h3>
+                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
+                            Primero, <strong>registra a los jugadores</strong> en "Elenco". Sus nombres se guardarán
+                            para siempre. ¡Solo tienes que hacerlo una vez!
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
+                            <span>🎬</span> 2. Empezar la Función
+                        </h3>
+                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
+                            Pulsa <strong>JUGAR</strong>, selecciona quiénes están presentes y configura la partida
+                            (número de impostores, tema, etc.).
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
+                            <span>🤫</span> 3. Mecánica
+                        </h3>
+                        <ul
+                            class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50 space-y-2 list-disc list-inside">
+                            <li>Pasad el móvil para ver vuestro rol secreto.</li>
+                            <li><strong>Ciudadanos:</strong> Ven una palabra clave (ej: "Pizza").</li>
+                            <li><strong>Impostores:</strong> No ven nada (o ven una pista falsa).</li>
+                            <li>Debatid para descubrir al mentiroso sin revelar la palabra.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-purple-400 mb-2 flex items-center gap-2">
+                            <span>🔥</span> Modo Caos
+                        </h3>
+                        <p class="bg-purple-900/10 p-3 rounded-xl border border-purple-500/20 text-purple-200">
+                            Una variante loca donde las reglas cambian. Puede haber más impostores de lo normal, roles
+                            invertidos o eventos aleatorios. ¡Actívalo bajo tu propio riesgo!
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-amber-500 mb-2 flex items-center gap-2">
+                            <span>🏆</span> Salón de la Fama
+                        </h3>
+                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
+                            El juego guarda automáticamente quién gana. Compite por ver quién es el mejor detective o el
+                            mentiroso más hábil del mes.
+                        </p>
+                    </div>
+
+                    <div class="text-center pt-4 opacity-50 text-xs">
+                        <p>ImpoStar v1.0</p>
+                        <p>Hecho con ❤️ por Lucas Alin</p>
+                    </div>
+                </div>
             </div>
         </section>
 
