@@ -2778,7 +2778,7 @@ const EXTENSION_DATA_9 = {
         { word: 'Superclásico', hints: ['Boca', 'River', 'Pasión'] },
         { word: 'Balón de Oro', hints: ['Premio', 'Mejor', 'Individual'] },
         { word: 'Bota de Oro', hints: ['Goleador', 'Europa', 'Premio'] },
-        { word: 'Champions League', hints: ['Europa', 'Himno', 'Orejana'] },
+        { word: 'Champions League', hints: ['Europa', 'Himno', 'Orejona'] },
         { word: 'Copa del Mundo', hints: ['Naciones', 'Francia', 'Trofeo'] },
         { word: 'Copa Libertadores', hints: ['Sudamérica', 'Gloria', 'Eterna'] },
         { word: 'Eurocopa', hints: ['Europa', 'Naciones', 'Torneo'] },
