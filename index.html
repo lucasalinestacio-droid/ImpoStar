@@ -48,9 +48,9 @@
                             installingWorker.onstatechange = () => {
                                 if (installingWorker.state === 'installed') {
                                     if (navigator.serviceWorker.controller) {
-                                        // New content is available; please refresh.
-                                        console.log('New content available, refreshing...');
-                                        window.location.reload();
+                                        // New content available!
+                                        const banner = document.getElementById('update-banner');
+                                        if (banner) banner.classList.remove('-translate-y-full');
                                     }
                                 }
                             };
@@ -77,6 +77,16 @@
 <body
     class="bg-gray-900 text-white font-[ 'Plus Jakarta Sans', sans-serif] min-h-screen flex flex-col items-center justify-center p-4">
 
+    <!-- Update Notification Banner -->
+    <div id="update-banner"
+        class="fixed top-0 left-0 w-full bg-orange-600 text-white p-3 text-center font-bold z-[100] transform -translate-y-full transition-transform duration-500 flex items-center justify-center gap-4 shadow-xl">
+        <span class="flex items-center gap-2">🚀 <span class="hidden sm:inline">Nueva versión disponible</span><span
+                class="sm:hidden">¡Actualiza!</span></span>
+        <button onclick="window.location.reload()"
+            class="bg-white text-orange-600 px-4 py-1 rounded-xl text-sm hover:bg-orange-50 transition-colors shadow-sm">Actualizar
+            ahora</button>
+    </div>
+
     <!-- APP CONTAINER -->
     <header class="fixed top-0 left-0 w-full z-50 p-4 transition-all duration-300" id="main-header">
         <div class="max-w-4xl mx-auto flex items-center justify-between">
@@ -101,7 +111,7 @@
     <!-- SPACER for Header -->
     <div class="h-16 md:h-20"></div>
 
-    <div id="app-container" class="w-full max-w-md mx-auto relative z-10 p-4 pb-24">
+    <div id="app-content-container" class="w-full max-w-md mx-auto relative z-10 p-4 pb-24 transition-all duration-500">
 
         <!-- VIEW: HOME (Main Menu) -->
         <section id="view-home" class="w-full animate-fade-in-up">
@@ -150,23 +160,73 @@
 
         <!-- VIEW: GROUP (Roster) -->
         <section id="view-group" class="w-full hidden-view">
-            <div class="glass-panel rounded-3xl p-6 shadow-2xl mb-4 relative">
+            <div
+                class="glass-panel rounded-3xl p-8 shadow-2xl mb-4 relative min-h-[80vh] flex flex-col md:flex-row gap-10">
+                <!-- Main Header (Mobile visible) -->
+                <div class="md:hidden flex justify-between items-start mb-2">
+                    <div>
+                        <h2 class="text-2xl font-black text-stone-100">Elenco</h2>
+                        <p class="text-stone-500 text-sm"><span id="group-count">0</span> estrellas</p>
+                    </div>
+                </div>
+
+                <!-- LEFT/MAIN: Player List -->
+                <div class="flex-1 flex flex-col order-2 md:order-1">
+                    <div class="hidden md:block mb-6">
+                        <h2 class="text-4xl font-black text-stone-100 tracking-tighter">Elenco</h2>
+                        <p class="text-stone-500 text-sm font-medium mt-1"><span id="active-roster-name-display"
+                                class="text-orange-500 font-bold">...</span> • <span id="group-count-desktop">0</span>
+                            registrados</p>
+                    </div>
+
+                    <!-- Roster Actions (Top of list) -->
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="window.App.exportRoster()"
+                            class="flex-1 bg-stone-800/30 hover:bg-stone-800/60 p-4 rounded-2xl border border-stone-700/30 flex items-center justify-center gap-3 transition-all group">
+                            <span class="text-xl group-hover:rotate-12 transition-transform">📤</span>
+                            <span class="text-xs font-black text-stone-400 uppercase tracking-[0.2em]">Exportar</span>
+                        </button>
+                        <button onclick="window.App.importRoster()"
+                            class="flex-1 bg-stone-800/30 hover:bg-stone-800/60 p-4 rounded-2xl border border-stone-700/30 flex items-center justify-center gap-3 transition-all group">
+                            <span class="text-xl group-hover:rotate-12 transition-transform">📥</span>
+                            <span class="text-xs font-black text-stone-400 uppercase tracking-[0.2em]">Importar</span>
+                        </button>
+                    </div>
+
+                    <div id="group-list"
+                        class="space-y-3 mb-8 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2 flex-1"></div>
+
+                    <button onclick="window.App.toggleAddModal(true)"
+                        class="w-full py-5 rounded-2xl border-2 border-dashed border-stone-800 text-stone-500 hover:bg-white/5 hover:text-white hover:border-stone-600 transition-all font-black uppercase tracking-widest text-xs flex justify-center items-center gap-3 mt-auto">
+                        <span class="text-xl">+</span> Reclutar Actor
+                    </button>
+                </div>
+
+                <!-- RIGHT: Roster Navigator -->
+                <div
+                    class="w-full md:w-72 border-b md:border-b-0 md:border-l border-stone-800/60 pb-6 md:pb-0 md:pl-8 order-1 md:order-2">
+                    <div class="flex justify-between items-center mb-6 pr-12">
+                        <!-- Added padding for close button space -->
+                        <p class="text-[10px] font-black text-stone-600 uppercase tracking-[0.3em]">Tus Elencos</p>
+                        <button onclick="window.App.promptCreateRoster()"
+                            class="text-orange-500 hover:text-orange-400 font-black text-2xl px-2 transition-colors">
+                            +
+                        </button>
+                    </div>
+
+                    <div id="roster-navigator"
+                        class="flex md:flex-col gap-3 overflow-x-auto md:overflow-x-visible md:overflow-y-auto py-1 custom-scrollbar no-scrollbar-mobile">
+                        <!-- Roster items -->
+                    </div>
+                </div>
+
+                <!-- Fixed Close Button position -->
                 <button onclick="window.App.nav('home')"
-                    class="absolute top-6 right-6 text-stone-500 hover:text-white transition-colors">
+                    class="absolute top-6 right-6 text-stone-700 hover:text-white transition-colors z-[60] bg-stone-900/80 p-1.5 rounded-xl border border-stone-800 shadow-xl">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                </button>
-
-                <h2 class="text-2xl font-black text-stone-100 mb-1">Elenco</h2>
-                <p class="text-stone-500 text-sm mb-6"><span id="group-count">0</span> estrellas registradas</p>
-
-                <div id="group-list" class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
-
-                <button onclick="window.App.toggleAddModal(true)"
-                    class="w-full py-4 rounded-2xl border-2 border-dashed border-stone-700 text-stone-400 hover:bg-stone-800 hover:text-white hover:border-stone-600 transition-all font-bold flex justify-center items-center gap-2">
-                    <span>+</span> Reclutar Actor
                 </button>
             </div>
         </section>
@@ -209,10 +269,36 @@
                 <div id="stats-monthly"
                     class="space-y-2 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1 hidden"></div>
 
-                <button onclick="window.App.resetDailyWins()"
-                    class="w-full py-3 text-xs uppercase font-bold text-stone-500 hover:text-orange-400 transition-colors border-t border-stone-800 pt-4">
-                    Resetear Victorias de Hoy
-                </button>
+                <!-- Info Footer (Countdowns & Active Roster) -->
+                <div class="mt-4 pt-4 border-t border-stone-800 flex flex-col gap-3">
+                    <div class="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] font-black">
+                        <span class="text-stone-600">Elenco activo</span>
+                        <span id="stats-active-roster" class="text-orange-500">...</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-stone-600 text-[9px] uppercase tracking-widest font-black">Reinicio
+                                Diario</span>
+                            <span id="stats-daily-timer"
+                                class="text-stone-400 font-mono font-bold text-xs">00:00:00</span>
+                        </div>
+                        <div class="flex flex-col gap-1 text-right">
+                            <span class="text-stone-600 text-[9px] uppercase tracking-widest font-black">Reinicio
+                                Mensual</span>
+                            <span id="stats-monthly-timer" class="text-stone-400 font-mono font-bold text-xs">00d
+                                00:00:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button onclick="window.App.nav('group')"
+                        class="w-full py-4 text-[10px] uppercase font-bold text-stone-500 hover:text-white transition-all bg-stone-900/40 hover:bg-stone-800/60 rounded-2xl border border-stone-800/50 flex items-center justify-center gap-2 group">
+                        <span>👥</span> Cambiar Elenco Activo
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity ml-1">→</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -249,9 +335,18 @@
                     </svg>
                 </button>
 
-                <h2 class="text-xl font-bold text-stone-100 mb-1">Casting Activo</h2>
-                <p class="text-xs text-stone-500 mb-4"><span id="setup-count" class="text-orange-400 font-bold">0</span>
-                    seleccionados</p>
+                <div class="flex items-center justify-between mb-4 pr-12">
+                    <div>
+                        <h2 class="text-xl font-bold text-stone-100 mb-0.5">Casting Activo</h2>
+                        <p class="text-[10px] text-stone-500 uppercase tracking-widest font-black">
+                            <span id="setup-count" class="text-orange-400">0</span> seleccionados
+                        </p>
+                    </div>
+                    <button onclick="window.App.nav('group')"
+                        class="text-[10px] font-black uppercase bg-stone-800/50 hover:bg-stone-700 text-stone-400 hover:text-white px-3 py-2 rounded-xl transition-all border border-stone-700/50 flex items-center gap-2">
+                        <span>👥</span> Cambiar Elenco
+                    </button>
+                </div>
 
                 <!-- Active Players Toggle -->
                 <div id="setup-player-list"
@@ -482,48 +577,53 @@
 
                     <div>
                         <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
-                            <span>👥</span> 1. Actores (Elenco)
+                            <span>👥</span> 1. Elenco y Grupos
                         </h3>
-                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
-                            Primero, <strong>registra a los jugadores</strong> en "Elenco". Sus nombres se guardarán
-                            para siempre. ¡Solo tienes que hacerlo una vez!
-                        </p>
+                        <div class="bg-stone-800/50 p-4 rounded-xl border border-stone-700/50 space-y-3">
+                            <p>Registra a tus amigos en la sección <strong>Elenco</strong>. Los nombres y sus victorias
+                                se guardan permanentemente.</p>
+                            <p><strong>Múltiples Elencos:</strong> Usa el navegador lateral para crear distintos grupos
+                                (ej: "Familia", "Amigos del Fútbol"). Cada grupo tiene su propia clasificación.</p>
+                        </div>
                     </div>
 
                     <div>
                         <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
-                            <span>🎬</span> 2. Empezar la Función
+                            <span>🎬</span> 2. Configurar Partida
                         </h3>
-                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
-                            Pulsa <strong>JUGAR</strong>, selecciona quiénes están presentes y configura la partida
-                            (número de impostores, tema, etc.).
-                        </p>
+                        <div class="bg-stone-800/50 p-4 rounded-xl border border-stone-700/50 space-y-3">
+                            <p>En <strong>JUGAR</strong>, selecciona quiénes participan. Puedes cambiar el número de
+                                impostores y el escenario.</p>
+                            <p><strong>Configuración Avanzada:</strong> Activa el <em>Reloj de Debate</em>, permite que
+                                los <em>Impostores se conozcan</em> o dales <em>Pistas Falsas</em> para equilibrar el
+                                juego.</p>
+                        </div>
                     </div>
 
                     <div>
                         <h3 class="text-lg font-bold text-orange-400 mb-2 flex items-center gap-2">
-                            <span>🤫</span> 3. Mecánica
+                            <span>🤫</span> 3. Mecánica de Roles
                         </h3>
-                        <ul
-                            class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50 space-y-2 list-disc list-inside">
-                            <li>Pasad el móvil para ver vuestro rol secreto.</li>
-                            <li><strong>Ciudadanos:</strong> Ven una palabra clave (ej: "Pizza").</li>
-                            <li><strong>Impostores:</strong> No ven nada (o ven una pista falsa).</li>
-                            <li><strong>Revelar compañeros (Opcional):</strong> Si está activado, los impostores sabrán
-                                quiénes son sus aliados.</li>
-                            <li><strong>Pistas para impostor (Opcional):</strong> Puedes decidir si los impostores
-                                reciben ayuda o no.</li>
-                            <li>Debatid para descubrir al mentiroso sin revelar la palabra.</li>
-                        </ul>
+                        <div class="bg-stone-800/50 p-4 rounded-xl border border-stone-700/50 space-y-4">
+                            <div>
+                                <p class="text-emerald-400 font-bold text-xs uppercase mb-1">🕵️ Civiles</p>
+                                <p>Ven una palabra clave. Deben descubrir quién miente sin decir la palabra
+                                    directamente.</p>
+                            </div>
+                            <div>
+                                <p class="text-rose-400 font-bold text-xs uppercase mb-1">🤫 Impostores</p>
+                                <p>No conocen la palabra. Deben fingir que la saben y pasar desapercibidos.</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
                         <h3 class="text-lg font-bold text-purple-400 mb-2 flex items-center gap-2">
                             <span>🔥</span> Modo Caos
                         </h3>
-                        <p class="bg-purple-900/10 p-3 rounded-xl border border-purple-500/20 text-purple-200">
-                            Una variante loca donde las reglas cambian. Puede haber más impostores de lo normal, roles
-                            invertidos o eventos aleatorios. ¡Actívalo bajo tu propio riesgo!
+                        <p class="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20 text-purple-200">
+                            Una variante impredecible donde el número de impostores es un misterio hasta el final.
+                            ¡Ideal para grupos grandes y expertos!
                         </p>
                     </div>
 
@@ -531,14 +631,30 @@
                         <h3 class="text-lg font-bold text-amber-500 mb-2 flex items-center gap-2">
                             <span>🏆</span> Salón de la Fama
                         </h3>
-                        <p class="bg-stone-800/50 p-3 rounded-xl border border-stone-700/50">
-                            El juego guarda automáticamente quién gana. Compite por ver quién es el mejor detective o el
-                            mentiroso más hábil del mes.
+                        <div class="bg-stone-800/50 p-4 rounded-xl border border-stone-700/50 space-y-3">
+                            <p>Consulta quién es el mejor en las tres categorías:</p>
+                            <ul class="list-disc list-inside space-y-1 text-stone-400">
+                                <li><strong>Hoy:</strong> Victorias en las últimas 24h.</li>
+                                <li><strong>Mensual:</strong> Clasificación del mes actual.</li>
+                                <li><strong>Total:</strong> El histórico acumulado.</li>
+                            </ul>
+                            <p class="text-xs italic text-stone-500">¿Ves un contador? Indica cuánto tiempo queda para
+                                que se reinicien las victorias del día o mes.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-sky-400 mb-2 flex items-center gap-2">
+                            <span>📲</span> App Siempre al Día
+                        </h3>
+                        <p class="bg-sky-900/10 p-4 rounded-xl border border-sky-500/20 text-sky-200">
+                            ImpoStar es una <strong>PWA</strong>. Si ves un aviso de "Actualización Disponible" arriba,
+                            púlsalo para instalar las últimas mejoras al instante.
                         </p>
                     </div>
 
-                    <div class="text-center pt-4 opacity-50 text-xs">
-                        <p>ImpoStar v1.0</p>
+                    <div class="text-center pt-4 opacity-50 text-[10px] font-bold uppercase tracking-widest">
+                        <p>ImpoStar v7.0</p>
                         <p>Hecho con ❤️ por Lucas Alin</p>
                     </div>
                 </div>

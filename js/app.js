@@ -109,6 +109,81 @@ window.App = {
         Store.save();
     },
 
+    exportRoster: () => {
+        const code = Store.exportRoster();
+
+        navigator.clipboard.writeText(code).then(() => {
+            alert('Código de elenco copiado al portapapeles. ¡Pásalo a tus amigos!');
+        }).catch(err => {
+            console.error('Error al copiar:', err);
+            // Fallback: prompt to show it and let user copy manually
+            prompt("Copia tu código de elenco:", code);
+        });
+    },
+
+    importRoster: () => {
+        const code = prompt("Pega aquí el código del elenco:");
+        if (code) {
+            if (Store.importRoster(code)) {
+                UI.renderGroup();
+                alert('Elenco importado con éxito');
+            } else {
+                alert('Error al importar el elenco. Verifica el código.');
+            }
+        }
+    },
+
+    editPlayerName: (id) => {
+        const p = State.players.find(x => x.id === id);
+        if (p) {
+            const newName = prompt(`Editar nombre de ${p.name}:`, p.name);
+            if (newName && newName !== p.name) {
+                Store.updatePlayerName(id, newName);
+                UI.renderGroup();
+            }
+        }
+    },
+
+    // --- ROSTER MANAGEMENT ---
+    switchRoster: (id) => {
+        Store.switchRoster(parseInt(id));
+        UI.renderGroup();
+        UI.renderStats(); // Update leaderboards
+    },
+
+    promptCreateRoster: () => {
+        const name = prompt("Nombre del nuevo elenco:");
+        if (name) {
+            Store.createRoster(name);
+            UI.renderGroup();
+        }
+    },
+
+    promptRenameRoster: (id) => {
+        const roster = State.rosters.find(r => r.id === id);
+        if (!roster) return;
+
+        const newName = prompt("Nuevo nombre del elenco:", roster.name);
+        if (newName && newName !== roster.name) {
+            Store.renameRoster(roster.id, newName);
+            UI.renderGroup();
+        }
+    },
+
+    promptDeleteRoster: (id) => {
+        const roster = State.rosters.find(r => r.id === id);
+        if (!roster) return;
+
+        if (State.rosters.length <= 1) {
+            alert("Debes tener al menos un elenco.");
+            return;
+        }
+        if (confirm(`¿Seguro que quieres borrar "${roster.name}" y todos sus jugadores?`)) {
+            Store.deleteRoster(roster.id);
+            UI.renderGroup();
+        }
+    },
+
     // Script Helpers
     tempScriptItems: [], // RAM only
 
@@ -363,4 +438,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize impostor count display
     UI.updateImpostorDisplay(State.config.impostorCount || 1, State.config.chaosMode || false);
+
+    // Global interval for UI updates (countdowns, etc.)
+    setInterval(() => {
+        if (window.UI && UI.updateStatsCountdown) UI.updateStatsCountdown();
+    }, 1000);
 });

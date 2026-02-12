@@ -21,6 +21,19 @@ window.Router = {
                 el.classList.add('hidden-view');
             }
         });
+
+        // Widen container for Split-View (Roster/Group)
+        const container = document.getElementById('app-content-container');
+        if (container) {
+            if (viewId === 'group') {
+                container.classList.remove('max-w-md');
+                container.classList.add('max-w-3xl');
+            } else {
+                container.classList.remove('max-w-3xl');
+                container.classList.add('max-w-md');
+            }
+        }
+
         window.scrollTo(0, 0);
     }
 };
@@ -35,38 +48,81 @@ window.UI = {
     renderGroup() {
         const list = document.getElementById('group-list');
         const count = document.getElementById('group-count');
+        const countDesktop = document.getElementById('group-count-desktop');
+        const rosterNav = document.getElementById('roster-navigator');
+        const activeNameDisplay = document.getElementById('active-roster-name-display');
 
+        // Update counts
         if (count) count.innerText = State.players.length;
+        if (countDesktop) countDesktop.innerText = State.players.length;
+
+        // Find active roster
+        const activeRoster = State.rosters.find(r => r.id === State.activeRosterId) || State.rosters[0];
+        if (activeNameDisplay && activeRoster) {
+            activeNameDisplay.innerText = activeRoster.name;
+        }
+
+        // Render Roster Navigator (Side Panel)
+        if (rosterNav) {
+            rosterNav.innerHTML = State.rosters.map(r => {
+                const isActive = r.id === State.activeRosterId;
+                return `
+                    <div onclick="window.App.switchRoster(${r.id})"
+                        class="flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border ${isActive ? 'bg-orange-500/10 border-orange-500/40 text-orange-400 shadow-lg shadow-orange-500/5' : 'bg-stone-900/40 border-stone-800/40 text-stone-500 hover:text-stone-300 hover:border-stone-700'} min-w-[140px] md:min-w-0 group/nav">
+                        <span class="font-black text-xs uppercase tracking-wider truncate">${r.name}</span>
+                        <div class="flex items-center gap-1 opacity-0 group-hover/nav:opacity-100 transition-opacity ml-2">
+                             <button onclick="event.stopPropagation(); window.App.promptRenameRoster(${r.id})" class="hover:text-amber-500 p-1 text-sm">✎</button>
+                             ${State.rosters.length > 1 ? `<button onclick="event.stopPropagation(); window.App.promptDeleteRoster(${r.id})" class="hover:text-rose-500 p-1 text-sm">✕</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         if (!list) return;
 
         if (State.players.length === 0) {
-            list.innerHTML = `<div class="text-center text-stone-500 py-8 italic text-sm">Sin actores registrados.<br>¡Recluta tu elenco!</div>`;
+            list.innerHTML = `<div class="text-center text-stone-600 py-12 italic text-sm">Sin actores registrados.<br>¡Recluta tu elenco!</div>`;
             return;
         }
 
         list.innerHTML = State.players.map(p => `
-            <div class="flex items-center justify-between p-4 rounded-2xl bg-stone-800/50 border border-stone-700/30 hover:bg-stone-800 transition-all animate-fade-in-up group">
-                <div class="flex items-center gap-3" style="overflow: visible;">
-                    <img src="${p.avatar}" class="w-12 h-12 rounded-full bg-stone-700 select-none flex-shrink-0">
-                    <div class="flex-1">
-                        <p class="font-bold text-stone-200">${p.name}</p>
+            <div class="flex items-center justify-between p-4 rounded-2xl bg-stone-800/40 border border-stone-700/20 hover:bg-stone-800/60 transition-all animate-fade-in-up group">
+                <div class="flex items-center gap-4">
+                    <img src="${p.avatar}" class="w-12 h-12 rounded-full bg-stone-700/50 shadow-inner select-none flex-shrink-0">
+                    <div>
+                        <p class="font-bold text-stone-200 leading-tight">${p.name}</p>
+                        <p class="text-[10px] uppercase tracking-tighter text-stone-500 font-black mt-0.5">${p.wins || 0} Victorias</p>
                     </div>
                 </div>
-                <button onclick="window.App.deletePlayer(${p.id}, event)" 
-                    class="text-stone-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all p-2 flex-shrink-0">
-                    ✕
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.App.editPlayerName(${p.id})" 
+                        class="text-stone-600 hover:text-amber-500 opacity-0 group-hover:opacity-100 transition-all p-2 flex-shrink-0" title="Editar">
+                        ✎
+                    </button>
+                    <button onclick="window.App.deletePlayer(${p.id}, event)" 
+                        class="text-stone-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all p-2 flex-shrink-0">
+                        ✕
+                    </button>
+                </div>
             </div>
         `).join('');
     },
 
     // --- STATS (Hall of Fame) ---
     renderStats() {
+        // Show current roster name in stats
+        const activeName = document.getElementById('stats-active-roster');
+        const activeRoster = State.rosters.find(r => r.id === State.activeRosterId);
+        if (activeName && activeRoster) activeName.innerText = activeRoster.name;
+
         // Render all three leaderboards
         this.renderLeaderboard('total', 'wins');
         this.renderLeaderboard('daily', 'dailyWins');
         this.renderLeaderboard('monthly', 'monthlyWins');
+
+        // Update countdown if possible
+        this.updateStatsCountdown();
     },
 
     renderLeaderboard(type, winsProp) {
@@ -483,6 +539,40 @@ window.UI = {
     animateTeamWin(team) {
         // Not used heavily, just toast or feedback could go here
         // For now, App handles redirection or state update
+    },
+
+    updateStatsCountdown() {
+        const dailyEl = document.getElementById('stats-daily-timer');
+        const monthlyEl = document.getElementById('stats-monthly-timer');
+        if (!dailyEl || !monthlyEl) return;
+
+        const now = new Date();
+
+        // --- Daily Calculation ---
+        const tomorrow = new Date(now);
+        tomorrow.setHours(24, 0, 0, 0); // Next midnight
+        const dailyDiff = tomorrow - now;
+
+        const dh = Math.floor(dailyDiff / 3600000);
+        const dm = Math.floor((dailyDiff % 3600000) / 60000);
+        const ds = Math.floor((dailyDiff % 60000) / 1000);
+        dailyEl.innerText = `${dh.toString().padStart(2, '0')}:${dm.toString().padStart(2, '0')}:${ds.toString().padStart(2, '0')}`;
+
+        // --- Monthly Calculation ---
+        const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const monthlyDiff = nextMonth - now;
+
+        const totalHours = Math.floor(monthlyDiff / 3600000);
+        const days = Math.floor(totalHours / 24);
+        const hours = totalHours % 24;
+        const mins = Math.floor((monthlyDiff % 3600000) / 60000);
+        const secs = Math.floor((monthlyDiff % 60000) / 1000);
+
+        if (days > 0) {
+            monthlyEl.innerText = `${days}d ${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        } else {
+            monthlyEl.innerText = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
     }
 };
 
