@@ -99,6 +99,16 @@ window.App = {
         Store.save();
     },
 
+    toggleRevealPartners: (checkbox) => {
+        State.config.revealPartners = checkbox.checked;
+        Store.save();
+    },
+
+    toggleShowHints: (checkbox) => {
+        State.config.showHints = checkbox.checked;
+        Store.save();
+    },
+
     // Script Helpers
     tempScriptItems: [], // RAM only
 
@@ -339,6 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = document.getElementById('category-select');
     if (categorySelect) {
         categorySelect.addEventListener('change', (e) => App.changeCategory(e.target.value));
+    }
+
+    const revealPartners = document.getElementById('reveal-partners-toggle');
+    if (revealPartners) {
+        revealPartners.checked = State.config.revealPartners !== false;
+    }
+
+    const showHints = document.getElementById('show-hints-toggle');
+    if (showHints) {
+        showHints.checked = State.config.showHints !== false;
     }
 
     // Initialize impostor count display

@@ -227,6 +227,16 @@ window.UI = {
             timerDuration.value = mins;
             document.getElementById('timer-display-val').innerText = `${mins} min`;
         }
+
+        const revealPartners = document.getElementById('reveal-partners-toggle');
+        if (revealPartners) {
+            revealPartners.checked = State.config.revealPartners !== false;
+        }
+
+        const showHints = document.getElementById('show-hints-toggle');
+        if (showHints) {
+            showHints.checked = State.config.showHints !== false;
+        }
     },
 
     updateImpostorDisplay(count, chaos) {
@@ -295,7 +305,7 @@ window.UI = {
         `;
     },
 
-    setRoleContent(isImpostor, word, hint) {
+    setRoleContent(isImpostor, word, hint, currentPId) {
         const container = document.getElementById('role-content');
         const topBar = document.getElementById('role-top-bar');
         const cardBack = document.getElementById('card-back');
@@ -303,6 +313,51 @@ window.UI = {
         if (!container || !topBar || !cardBack) return; // Safety check
 
         if (isImpostor) {
+            // Logic to find partners
+            let partnerInfo = '';
+            if (State.config.revealPartners !== false) {
+                const partners = State.session.impostors.filter(id => id !== currentPId);
+                if (partners.length > 0) {
+                    const names = partners.map(id => {
+                        const p = State.players.find(px => px.id === id);
+                        return p ? p.name : 'Desconocido';
+                    }).join(', ');
+                    partnerInfo = `
+                        <div class="mt-4 pt-4 border-t border-rose-500/20 w-full">
+                            <p class="text-rose-300 text-[9px] uppercase font-bold mb-1">Compañeros</p>
+                            <p class="text-rose-100 text-xs font-bold">${names}</p>
+                        </div>
+                    `;
+                } else {
+                    partnerInfo = `
+                        <div class="mt-4 pt-4 border-t border-rose-500/20 w-full">
+                            <p class="text-rose-300 text-[9px] uppercase font-bold mb-1">Estado</p>
+                            <p class="text-rose-100 text-xs font-bold italic">Estas solo aqui</p>
+                        </div>
+                    `;
+                }
+            }
+
+            let hintSection = '';
+            if (State.config.showHints !== false) {
+                hintSection = `
+                    <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 w-full max-w-[200px]">
+                        <p class="text-rose-300 text-[10px] uppercase font-bold mb-1">Tu pista falsa</p>
+                        <p class="text-rose-100 text-lg font-bold leading-tight">"${hint}"</p>
+                        ${partnerInfo}
+                    </div>
+                `;
+            } else {
+                // Hints disabled - show explicit message
+                hintSection = `
+                    <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 w-full max-w-[200px]">
+                        <p class="text-rose-300 text-[10px] uppercase font-bold mb-1">Sistema</p>
+                        <p class="text-rose-100 text-xs font-bold leading-tight">Lo siento pero no hay pistas</p>
+                        ${partnerInfo}
+                    </div>
+                `;
+            }
+
             container.innerHTML = `
                 <div class="mb-4 relative">
                     <div class="absolute inset-0 bg-rose-500/20 blur-xl rounded-full animate-pulse"></div>
@@ -311,10 +366,7 @@ window.UI = {
                 <h1 class="text-4xl font-black text-white mb-1 tracking-tighter">IMPOSTOR</h1>
                 <p class="text-rose-400 text-xs font-bold uppercase tracking-widest mb-6">Engaña a todos</p>
                 
-                <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 w-full max-w-[200px]">
-                    <p class="text-rose-300 text-[10px] uppercase font-bold mb-1">Tu pista falsa</p>
-                    <p class="text-rose-100 text-lg font-bold leading-tight">"${hint}"</p>
-                </div>
+                ${hintSection}
             `;
             // Styles
             topBar.className = "absolute top-0 w-full h-2 bg-gradient-to-r from-rose-600 to-orange-600";

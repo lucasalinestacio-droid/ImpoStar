@@ -14,6 +14,8 @@ window.State = {
         category: 'Lugares',
         timerEnabled: true,
         timerDuration: 180, // seconds
+        revealPartners: true,
+        showHints: true,
         customPreset: null
     },
 

@@ -99,7 +99,7 @@ window.Game = {
         const s = State.session;
         const currentPId = s.activePlayers[s.currentRevealIndex];
         const isImp = s.impostors.includes(currentPId);
-        UI.setRoleContent(isImp, s.secretWord, s.hint);
+        UI.setRoleContent(isImp, s.secretWord, s.hint, currentPId);
     },
 
     revealNext() {

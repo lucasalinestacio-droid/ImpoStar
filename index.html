@@ -282,6 +282,52 @@
                         </div>
                     </div>
 
+                    <!-- Reveal Partners Toggle -->
+                    <div class="bg-stone-950/30 p-4 rounded-xl border border-stone-800/50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 cursor-pointer"
+                                onclick="document.getElementById('reveal-partners-toggle').click()">
+                                <div class="bg-rose-500/10 p-2 rounded-xl">
+                                    <span class="text-xl">🤫</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-stone-200 text-sm">Revelar compañeros</p>
+                                    <p class="text-[10px] text-stone-500">Los impostores se conocen</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="reveal-partners-toggle" class="sr-only peer" checked
+                                    onchange="window.App.toggleRevealPartners(this)">
+                                <div
+                                    class="w-11 h-6 bg-stone-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Show Hints Toggle -->
+                    <div class="bg-stone-950/30 p-4 rounded-xl border border-stone-800/50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 cursor-pointer"
+                                onclick="document.getElementById('show-hints-toggle').click()">
+                                <div class="bg-amber-500/10 p-2 rounded-xl">
+                                    <span class="text-xl">💡</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-stone-200 text-sm">Pistas para impostor</p>
+                                    <p class="text-[10px] text-stone-500">Recibe una pista falsa</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="show-hints-toggle" class="sr-only peer" checked
+                                    onchange="window.App.toggleShowHints(this)">
+                                <div
+                                    class="w-11 h-6 bg-stone-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <!-- Timer Toggle -->
                     <div class="bg-stone-950/50 p-4 rounded-xl border border-stone-800">
                         <div class="flex items-center justify-between mb-2">
@@ -463,6 +509,10 @@
                             <li>Pasad el móvil para ver vuestro rol secreto.</li>
                             <li><strong>Ciudadanos:</strong> Ven una palabra clave (ej: "Pizza").</li>
                             <li><strong>Impostores:</strong> No ven nada (o ven una pista falsa).</li>
+                            <li><strong>Revelar compañeros (Opcional):</strong> Si está activado, los impostores sabrán
+                                quiénes son sus aliados.</li>
+                            <li><strong>Pistas para impostor (Opcional):</strong> Puedes decidir si los impostores
+                                reciben ayuda o no.</li>
                             <li>Debatid para descubrir al mentiroso sin revelar la palabra.</li>
                         </ul>
                     </div>
