@@ -109,26 +109,33 @@ window.App = {
         Store.save();
     },
 
-    exportRoster: () => {
-        const code = Store.exportRoster();
+    exportRoster: async (btn) => {
+        // Optional: pass button element to show loading state
+        if (btn) btn.style.opacity = '0.5';
 
-        navigator.clipboard.writeText(code).then(() => {
-            alert('Código de elenco copiado al portapapeles. ¡Pásalo a tus amigos!');
-        }).catch(err => {
-            console.error('Error al copiar:', err);
-            // Fallback: prompt to show it and let user copy manually
-            prompt("Copia tu código de elenco:", code);
-        });
+        try {
+            const code = await Store.exportRoster();
+            navigator.clipboard.writeText(code).then(() => {
+                alert(`Código corto copiado: ${code}\n¡Pásalo a tus amigos!`);
+            }).catch(err => {
+                prompt("Copia tu código de elenco:", code);
+            });
+        } catch (e) {
+            alert("Error al generar código corto.");
+        } finally {
+            if (btn) btn.style.opacity = '1';
+        }
     },
 
-    importRoster: () => {
-        const code = prompt("Pega aquí el código del elenco:");
+    importRoster: async () => {
+        const code = prompt("Pega aquí el código corto (ej: A1B2C3) o el código largo:");
         if (code) {
-            if (Store.importRoster(code)) {
+            const success = await Store.importRoster(code);
+            if (success) {
                 UI.renderGroup();
                 alert('Elenco importado con éxito');
             } else {
-                alert('Error al importar el elenco. Verifica el código.');
+                alert('Error al importar. Verifica que el código sea correcto y tengas internet para códigos cortos.');
             }
         }
     },

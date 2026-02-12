@@ -237,46 +237,75 @@ window.Store = {
         }
     },
 
-    exportRoster() {
+    async exportRoster() {
         // Compact format: name:wins,name:wins
-        // We only export essential stats to keep it short
         const compact = State.players.map(p => `${p.name}:${p.wins || 0}`).join(',');
+
+        try {
+            const rosterData = {
+                name: (State.rosters.find(r => r.id === State.activeRosterId) || {}).name || "Sin nombre",
+                players: compact,
+                timestamp: new Date().toISOString()
+            };
+
+            const response = await fetch('https://api.npoint.io/', {
+                method: 'POST',
+                body: JSON.stringify(rosterData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+            if (data && data.id) {
+                return data.id; // Returns short ID (e.g. 8 chars)
+            }
+        } catch (e) {
+            console.error("Error saving to npoint:", e);
+        }
+
+        // Fallback: Long Base64 code if offline or error
         return btoa(unescape(encodeURIComponent(compact)));
     },
 
-    importRoster(base64Data) {
-        try {
-            const raw = decodeURIComponent(escape(atob(base64Data)));
-            let players = [];
+    async importRoster(code) {
+        if (!code) return false;
 
-            if (raw.startsWith('[') || raw.startsWith('{')) {
-                // Legacy JSON format
-                players = JSON.parse(raw);
+        try {
+            let rawData = "";
+
+            // npoint IDs are typically 8-10 chars. Base64 is much longer.
+            if (code.length <= 15) {
+                const response = await fetch(`https://api.npoint.io/${code.trim()}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    rawData = data.players || "";
+                } else {
+                    return false;
+                }
             } else {
-                // Compact format: Name:Wins,Name:Wins
-                players = raw.split(',').map(item => {
-                    const [name, wins] = item.split(':');
-                    return {
-                        id: Date.now() + Math.random(),
-                        name: name.trim(),
-                        wins: parseInt(wins) || 0,
-                        dailyWins: 0,
-                        monthlyWins: 0,
-                        active: true,
-                        avatar: `https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(name.trim())}&backgroundColor=transparent`
-                    };
-                });
+                // Legacy long Base64 code
+                rawData = decodeURIComponent(escape(atob(code)));
             }
+
+            if (!rawData) return false;
+
+            let players = rawData.split(',').map(item => {
+                const [name, wins] = item.split(':');
+                return {
+                    id: Date.now() + Math.random(),
+                    name: name.trim(),
+                    wins: parseInt(wins) || 0,
+                    dailyWins: 0,
+                    monthlyWins: 0,
+                    active: true,
+                    avatar: `https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(name.trim())}&backgroundColor=transparent`
+                };
+            });
 
             if (Array.isArray(players)) {
                 // Ensure all imported players have correct structure
                 players.forEach(p => {
                     if (!p.id) p.id = Date.now() + Math.random();
                     if (!p.avatar) p.avatar = `https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(p.name)}&backgroundColor=transparent`;
-                    if (p.wins === undefined) p.wins = 0;
-                    if (p.dailyWins === undefined) p.dailyWins = 0;
-                    if (p.monthlyWins === undefined) p.monthlyWins = 0;
-                    if (p.active === undefined) p.active = true;
                 });
 
                 State.players = players;
@@ -287,11 +316,11 @@ window.Store = {
                     State.rosters[activeIdx].players = players;
                 }
 
-                Store.save();
+                this.save();
                 return true;
             }
         } catch (e) {
-            console.error("Import failed:", e);
+            console.error('Error al importar:', e);
         }
         return false;
     },
