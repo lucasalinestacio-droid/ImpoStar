@@ -110,32 +110,63 @@ window.App = {
     },
 
     exportRoster: async (btn) => {
-        // Optional: pass button element to show loading state
+        // Visual feedback
         if (btn) btn.style.opacity = '0.5';
 
         try {
             const code = await Store.exportRoster();
-            navigator.clipboard.writeText(code).then(() => {
-                alert(`Código corto copiado: ${code}\n¡Pásalo a tus amigos!`);
+            const shareUrl = `${window.location.origin}${window.location.pathname}?r=${code}`;
+
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert(`¡Enlace de elenco copiado!\nCompártelo con tus amigos para que se unan al instante.`);
             }).catch(err => {
-                prompt("Copia tu código de elenco:", code);
+                prompt("Copia tu enlace de elenco:", shareUrl);
             });
         } catch (e) {
-            alert("Error al generar código corto.");
+            alert("Error al generar el enlace. Verifica tu conexión.");
         } finally {
             if (btn) btn.style.opacity = '1';
         }
     },
 
     importRoster: async () => {
-        const code = prompt("Pega aquí el código corto (ej: A1B2C3) o el código largo:");
+        const code = prompt("Pega aquí el enlace de elenco, el código corto o el código largo:");
         if (code) {
-            const success = await Store.importRoster(code);
+            // Extract code if it's a URL
+            let cleanCode = code;
+            if (code.includes('?r=')) {
+                cleanCode = code.split('?r=')[1].split('&')[0];
+            } else if (code.includes('?roster=')) {
+                cleanCode = code.split('?roster=')[1].split('&')[0];
+            }
+
+            const success = await Store.importRoster(cleanCode);
             if (success) {
                 UI.renderGroup();
                 alert('Elenco importado con éxito');
             } else {
-                alert('Error al importar. Verifica que el código sea correcto y tengas internet para códigos cortos.');
+                alert('Error al importar. Verifica el código y tu conexión.');
+            }
+        }
+    },
+
+    checkUrlParams: async () => {
+        const params = new URLSearchParams(window.location.search);
+        const rosterCode = params.get('r') || params.get('roster');
+
+        if (rosterCode) {
+            // Remove the param from URL without refreshing
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+
+            // Confirm import
+            if (confirm("¿Quieres importar el elenco compartido mediante este enlace?")) {
+                const success = await Store.importRoster(rosterCode);
+                if (success) {
+                    Router.go('group');
+                    UI.renderGroup();
+                    alert("¡Elenco importado con éxito!");
+                }
             }
         }
     },
@@ -413,6 +444,7 @@ window.App = {
 // Init
 document.addEventListener('DOMContentLoaded', () => {
     Store.load();
+    App.checkUrlParams(); // Check for shared roster links
     Router.go('home');
 
     // Event Listeners for setup inputs
